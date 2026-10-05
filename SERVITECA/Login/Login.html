@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar Sesión – Serviteca</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <!-- ===== SECCIÓN PRINCIPAL ===== -->
+  <div class="login-wrapper">
+
+    <!-- Marca / Logo -->
+    <div class="login-brand">
+      <span class="brand-logo">🔧</span>
+      <h1>SERVITECA</h1>
+      <p>Sistema de Administración de Servicios</p>
+    </div>
+
+    <!-- Card de login -->
+    <div class="login-card">
+      <h2>🔐 Iniciar Sesión</h2>
+
+      <!-- Alerta de error general -->
+      <div class="alert alert-error" id="alertaGeneral" role="alert">
+        <span>⚠️</span>
+        <span id="alertaMensaje">Usuario o contraseña incorrectos.</span>
+      </div>
+
+      <form id="formLogin" novalidate>
+
+        <!-- Usuario -->
+        <div class="form-group">
+          <label for="usuario">Usuario</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              id="usuario"
+              name="usuario"
+              placeholder="Ingrese su usuario"
+              autocomplete="username"
+            />
+          </div>
+          <span class="field-error" id="errorUsuario">El usuario es requerido.</span>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="form-group">
+          <label for="contrasena">Contraseña</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="contrasena"
+              name="contrasena"
+              placeholder="Ingrese su contraseña"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Mostrar contraseña">
+              👁️
+            </button>
+          </div>
+          <span class="field-error" id="errorContrasena">La contraseña es requerida.</span>
+        </div>
+
+        <!-- Botón -->
+        <button type="submit" class="btn-login">
+          <span>🚀</span> Ingresar al Sistema
+        </button>
+
+      </form>
+
+      <!-- Pista de credenciales de demo -->
+      <div class="demo-hint">
+        <strong>Credenciales de prueba:</strong><br/>
+        Usuario: <strong>admin</strong> &nbsp;|&nbsp; Contraseña: <strong>1234</strong>
+      </div>
+    </div><!-- /.login-card -->
+
+  </div><!-- /.login-wrapper -->
+
+  <!-- Footer -->
+  <div class="login-footer">
+    © 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // Credenciales válidas (demo)
+    const CREDENCIALES = [
+      { usuario: 'admin',    clave: '1234' },
+      { usuario: 'tecnico',  clave: 'tec123' },
+    ];
+
+    const formLogin       = document.getElementById('formLogin');
+    const inputUsuario    = document.getElementById('usuario');
+    const inputContrasena = document.getElementById('contrasena');
+    const errorUsuario    = document.getElementById('errorUsuario');
+    const errorContrasena = document.getElementById('errorContrasena');
+    const alertaGeneral   = document.getElementById('alertaGeneral');
+    const alertaMensaje   = document.getElementById('alertaMensaje');
+    const togglePassword  = document.getElementById('togglePassword');
+
+    // Mostrar / ocultar contraseña
+    togglePassword.addEventListener('click', () => {
+      const tipo = inputContrasena.type === 'password' ? 'text' : 'password';
+      inputContrasena.type = tipo;
+      togglePassword.textContent = tipo === 'password' ? '👁️' : '🙈';
+    });
+
+    // Limpiar errores al escribir
+    inputUsuario.addEventListener('input', () => {
+      inputUsuario.classList.remove('error');
+      errorUsuario.classList.remove('visible');
+      ocultarAlerta();
+    });
+
+    inputContrasena.addEventListener('input', () => {
+      inputContrasena.classList.remove('error');
+      errorContrasena.classList.remove('visible');
+      ocultarAlerta();
+    });
+
+    // Envío del formulario
+    formLogin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!validarFormulario()) return;
+
+      const usuario = inputUsuario.value.trim();
+      const clave   = inputContrasena.value;
+
+      const credencial = CREDENCIALES.find(
+        c => c.usuario === usuario && c.clave === clave
+      );
+
+      if (credencial) {
+        // Guardar sesión en localStorage
+        localStorage.setItem('serviteca_usuario', usuario);
+        localStorage.setItem('serviteca_sesion', 'activa');
+        // Redirigir al menú principal
+        window.location.href = '../main.html';
+      } else {
+        mostrarAlerta('Usuario o contraseña incorrectos. Intente de nuevo.');
+        inputUsuario.classList.add('error');
+        inputContrasena.classList.add('error');
+      }
+    });
+
+    function validarFormulario() {
+      let valido = true;
+
+      if (!inputUsuario.value.trim()) {
+        inputUsuario.classList.add('error');
+        errorUsuario.classList.add('visible');
+        valido = false;
+      }
+
+      if (!inputContrasena.value) {
+        inputContrasena.classList.add('error');
+        errorContrasena.classList.add('visible');
+        valido = false;
+      }
+
+      return valido;
+    }
+
+    function mostrarAlerta(msg) {
+      alertaMensaje.textContent = msg;
+      alertaGeneral.classList.add('show');
+    }
+
+    function ocultarAlerta() {
+      alertaGeneral.classList.remove('show');
+    }
+
+    // Si ya hay sesión activa, redirigir directo al main
+    if (localStorage.getItem('serviteca_sesion') === 'activa') {
+      window.location.href = '../main.html';
+    }
+  </script>
+
+</body>
+</html>

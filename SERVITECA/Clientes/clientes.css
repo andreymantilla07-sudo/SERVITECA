@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header h1: alargado, centrado, letras blancas y fondo #02538a */
+header {
+    background-color: #02538a;
+    color: #ffffff;
+    padding: 18px 25px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+/* Cuadro con fondo blanco que encierra los campos y los botones */
+div.cuadro-blanco {
+    background-color: #ffffff;
+    border: 1.5px solid #cccccc;
+    border-radius: 10px;
+    padding: 25px 30px;
+    max-width: 480px;
+    width: 90%;
+    margin: 30px auto;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+div.cuadro-blanco h3 {
+    text-align: center;
+    color: #02538a;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+div.cuadro-blanco p {
+    margin: 12px 0 5px 0;
+    font-weight: bold;
+    color: #333333;
+    font-size: 14px;
+}
+
+div.cuadro-blanco input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+div.cuadro-blanco input[type="text"]:focus {
+    border-color: #02538a;
+}
+
+/* Botones de acción dentro del cuadro: más grandes, bonitos y verdes */
+div.botones-accion {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+div.botones-accion button {
+    background-color: #00cc8b;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 204, 139, 0.25);
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+div.botones-accion button:hover {
+    background-color: #00b37a;
+    box-shadow: 0 5px 12px rgba(0, 204, 139, 0.35);
+    transform: translateY(-2px);
+}
+
+div.botones-accion button:active {
+    transform: translateY(0);
+}
+
+/* Div exterior del botón volver al menú principal */
+div.contenedor-volver {
+    text-align: center;
+    margin: 30px auto;
+}
+
+/* Botón volver al menú principal: más grande, bonito y verde */
+div.contenedor-volver button {
+    background-color: #00cc8b;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 204, 139, 0.25);
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+div.contenedor-volver button:hover {
+    background-color: #00b37a;
+    box-shadow: 0 6px 14px rgba(0, 204, 139, 0.35);
+    transform: translateY(-2px);
+}
+
+div.contenedor-volver button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 204, 139, 0.2);
+}

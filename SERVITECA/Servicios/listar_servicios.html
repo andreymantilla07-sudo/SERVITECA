@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listar Servicios – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    .filters-bar {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filters-bar input,
+    .filters-bar select {
+      padding: 0.52rem 0.85rem;
+      border: 1.5px solid var(--borde);
+      border-radius: 7px;
+      font-size: 0.88rem;
+      outline: none;
+      font-family: inherit;
+      background: #fff;
+    }
+    .filters-bar input  { flex: 1; min-width: 200px; }
+    .filters-bar select { min-width: 160px; }
+    .filters-bar input:focus,
+    .filters-bar select:focus { border-color: var(--azul-principal); }
+    .count-label { font-size: 0.85rem; color: var(--texto-gris); margin-left: auto; }
+
+    .btn-sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; border-radius: 5px; border: none; cursor: pointer; font-family: inherit; font-weight: 600; transition: background-color 0.15s; }
+    .btn-sm-danger { background: #f8d7da; color: #721c24; }
+    .btn-sm-danger:hover { background: #f1b0b7; }
+    .btn-sm-info { background: #cce5ff; color: #004085; }
+    .btn-sm-info:hover { background: #b8daff; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Clientes/agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="../Clientes/consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="../Clientes/listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Carros/agregar_carro.html">➕ Agregar Carro</a>
+          <a href="../Carros/consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="../Carros/listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link active">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Servicios</span> <span>›</span>
+      <span>Listar Servicios</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">📋</span>
+      <div>
+        <h1>Lista de Servicios</h1>
+        <p>Todos los servicios prestados registrados en el sistema.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-success" id="alertaElim" role="alert">
+      <span>✅</span><span>Servicio eliminado correctamente.</span>
+    </div>
+
+    <div class="card">
+      <div class="filters-bar">
+        <input type="text" id="filtro" placeholder="🔍  Buscar por placa, cliente…" />
+        <select id="filtroServicio">
+          <option value="">Todos los servicios</option>
+          <option value="Cambio de Aceite">🛢️ Cambio de Aceite</option>
+          <option value="Sincronización">⚙️ Sincronización</option>
+          <option value="Alineación">🔄 Alineación</option>
+          <option value="Lavado">🚿 Lavado</option>
+        </select>
+        <a href="agregar_servicios.html" class="btn btn-success" style="white-space:nowrap;">➕ Nuevo Servicio</a>
+        <span class="count-label" id="countLabel">0 servicios</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Placa</th>
+              <th>Tipo de Servicio</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Registrado por</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyServicios"></tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon">🛠️</div>
+        <h3>No hay servicios registrados</h3>
+        <p>Comience registrando el primer servicio en el sistema.</p>
+        <a href="agregar_servicios.html" class="btn btn-success" style="margin-top:1rem;">➕ Agregar Servicio</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    const BADGE_MAP = {
+      'Cambio de Aceite': 'badge-aceite',
+      'Sincronización':   'badge-sync',
+      'Alineación':       'badge-alineacion',
+      'Lavado':           'badge-lavado',
+    };
+
+    let servicios = [];
+    let clientes  = [];
+
+    function getNombreCliente(id) {
+      const c = clientes.find(x => x.identificacion === id);
+      return c ? `${c.nombres} ${c.apellidos}` : id;
+    }
+
+    function cargarTabla(lista) {
+      const tbody = document.getElementById('tbodyServicios');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('countLabel');
+
+      count.textContent = lista.length + ' servicio' + (lista.length !== 1 ? 's' : '');
+
+      if (lista.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'flex';
+        empty.style.flexDirection = 'column';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = lista.map((s, i) => {
+        const badgeClass = BADGE_MAP[s.tipoServicio] || '';
+        return `<tr>
+          <td>${i + 1}</td>
+          <td>
+            <a href="consultar_servicios.html?placa=${s.placa}"
+               style="color:var(--azul-principal);font-weight:700;text-decoration:none;">
+              ${s.placa}
+            </a>
+          </td>
+          <td><span class="badge ${badgeClass}">${s.tipoServicio}</span></td>
+          <td>${s.fecha}</td>
+          <td>${getNombreCliente(s.idCliente)}</td>
+          <td>${s.registradoPor || '—'}</td>
+          <td style="display:flex;gap:0.3rem;">
+            <button class="btn-sm btn-sm-info"
+              onclick="verPlaca('${s.placa}')">🔍 Ver</button>
+            <button class="btn-sm btn-sm-danger"
+              onclick="eliminarServicio(${s.id})">🗑️</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function cargar() {
+      servicios = JSON.parse(localStorage.getItem('srv_servicios') || '[]');
+      clientes  = JSON.parse(localStorage.getItem('srv_clientes')  || '[]');
+      aplicarFiltros();
+    }
+
+    function aplicarFiltros() {
+      const texto   = document.getElementById('filtro').value.toLowerCase();
+      const tipoFil = document.getElementById('filtroServicio').value;
+
+      let filtrados = servicios.filter(s => {
+        const matchTexto = !texto ||
+          s.placa.toLowerCase().includes(texto) ||
+          s.idCliente.toLowerCase().includes(texto) ||
+          getNombreCliente(s.idCliente).toLowerCase().includes(texto);
+        const matchTipo = !tipoFil || s.tipoServicio === tipoFil;
+        return matchTexto && matchTipo;
+      });
+
+      cargarTabla(filtrados);
+    }
+
+    function verPlaca(placa) {
+      window.location.href = `consultar_servicios.html?placa=${placa}`;
+    }
+
+    function eliminarServicio(id) {
+      if (!confirm('¿Está seguro de eliminar este servicio?')) return;
+      servicios = servicios.filter(s => s.id !== id);
+      localStorage.setItem('srv_servicios', JSON.stringify(servicios));
+      document.getElementById('alertaElim').classList.add('show');
+      setTimeout(() => document.getElementById('alertaElim').classList.remove('show'), 3000);
+      aplicarFiltros();
+    }
+
+    document.getElementById('filtro').addEventListener('input', aplicarFiltros);
+    document.getElementById('filtroServicio').addEventListener('change', aplicarFiltros);
+
+    cargar();
+  </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+/* =============================================
+   ESTILOS DE LOGIN - SERVITECA
+   ============================================= */
+
+:root {
+  --azul-principal: #0F4C81;
+  --azul-oscuro:    #0a3560;
+  --verde-accion:   #4B8B62;
+  --verde-oscuro:   #3a6e4d;
+  --fondo-pagina:   #F2F1E8;
+  --fondo-card:     #EFEFEF;
+  --texto-claro:    #FFFFFF;
+  --texto-oscuro:   #1a1a2e;
+  --texto-gris:     #555555;
+  --borde:          #d0cfc8;
+  --error:          #c0392b;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0a3560 0%, #0F4C81 55%, #1a6b9e 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+/* --- Contenedor principal del login --- */
+.login-wrapper {
+  width: 100%;
+  max-width: 420px;
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Logo / Marca --- */
+.login-brand {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+.login-brand .brand-logo {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 0.4rem;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+}
+
+.login-brand h1 {
+  color: #FFFFFF;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.login-brand p {
+  color: rgba(255,255,255,0.75);
+  font-size: 0.88rem;
+  margin-top: 0.3rem;
+}
+
+/* --- Card del formulario --- */
+.login-card {
+  background-color: var(--fondo-card);
+  border-radius: 16px;
+  padding: 2.2rem 2rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.login-card h2 {
+  color: var(--azul-principal);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* --- Grupos de formulario --- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+}
+
+label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--azul-principal);
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.65rem 0.85rem 0.65rem 2.4rem;
+  border: 1.5px solid var(--borde);
+  border-radius: 8px;
+  background-color: #fff;
+  color: var(--texto-oscuro);
+  font-size: 0.93rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--azul-principal);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.14);
+}
+
+input.error {
+  border-color: var(--error);
+}
+
+/* Botón mostrar/ocultar contraseña */
+.toggle-password {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--texto-gris);
+  line-height: 1;
+}
+
+/* --- Mensaje de error de campo --- */
+.field-error {
+  font-size: 0.78rem;
+  color: var(--error);
+  display: none;
+}
+
+.field-error.visible { display: block; }
+
+/* --- Alerta general --- */
+.alert {
+  display: none;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-left: 4px solid;
+}
+
+.alert.show { display: flex; }
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: var(--error);
+}
+
+/* --- Botón de ingreso --- */
+.btn-login {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--verde-accion);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-login:hover  { background-color: var(--verde-oscuro); }
+.btn-login:active { transform: scale(0.97); }
+
+/* --- Credenciales de demo --- */
+.demo-hint {
+  margin-top: 1.4rem;
+  padding: 0.75rem 1rem;
+  background-color: rgba(15, 76, 129, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(15, 76, 129, 0.2);
+  font-size: 0.8rem;
+  color: var(--texto-gris);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.demo-hint strong {
+  color: var(--azul-principal);
+}
+
+/* --- Footer del login --- */
+.login-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.6rem 1.3rem;
+  }
+  .login-brand h1 {
+    font-size: 1.6rem;
+  }
+}

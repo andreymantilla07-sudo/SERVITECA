@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ayuda – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    /* Acordeón de ayuda */
+    .help-section { margin-bottom: 2rem; }
+
+    .accordion-item {
+      background: var(--fondo-card);
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      margin-bottom: 0.6rem;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.2rem;
+      cursor: pointer;
+      user-select: none;
+      background: var(--fondo-card);
+      transition: background-color 0.15s;
+    }
+    .accordion-header:hover { background: #e8eef5; }
+    .accordion-header.open  { background: var(--azul-principal); color: #fff; }
+    .accordion-header.open .acc-icon { color: #fff; }
+
+    .acc-left  { display: flex; align-items: center; gap: 0.7rem; font-weight: 600; font-size: 0.95rem; }
+    .acc-icon  { font-size: 1.2rem; }
+    .acc-arrow { font-size: 0.85rem; transition: transform 0.2s; }
+    .accordion-header.open .acc-arrow { transform: rotate(180deg); }
+
+    .accordion-body {
+      display: none;
+      padding: 1rem 1.3rem 1.2rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--texto-gris);
+      border-top: 1px solid var(--borde);
+    }
+    .accordion-body.open { display: block; }
+
+    .accordion-body ul {
+      margin: 0.5rem 0 0.5rem 1.2rem;
+    }
+    .accordion-body ul li { margin-bottom: 0.3rem; }
+
+    .accordion-body .step {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    .step-num {
+      min-width: 24px;
+      height: 24px;
+      background: var(--azul-principal);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* Servicios grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+    }
+    .service-help-card {
+      background: #fff;
+      border: 1px solid var(--borde);
+      border-radius: 8px;
+      padding: 0.9rem;
+      text-align: center;
+    }
+    .service-help-card .sh-icon { font-size: 2rem; }
+    .service-help-card .sh-name { font-weight: 700; font-size: 0.85rem; color: var(--azul-principal); margin-top: 0.3rem; }
+    .service-help-card .sh-desc { font-size: 0.78rem; color: var(--texto-gris); margin-top: 0.2rem; }
+
+    /* Credenciales demo */
+    .cred-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+    }
+    .cred-table th { background: var(--azul-principal); color: #fff; padding: 0.5rem 0.8rem; text-align: left; }
+    .cred-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--borde); font-family: monospace; }
+
+    /* About card */
+    .about-card {
+      background: linear-gradient(120deg, var(--azul-principal), #1a6b9e);
+      border-radius: 14px;
+      padding: 2rem;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .about-card h2 { color: #fff; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .about-card p  { color: rgba(255,255,255,0.85); font-size: 0.92rem; }
+    .about-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-top: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Clientes/agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="../Clientes/consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="../Clientes/listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Carros/agregar_carro.html">➕ Agregar Carro</a>
+          <a href="../Carros/consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="../Carros/listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Servicios/agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="../Servicios/consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="../Servicios/listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link active" href="ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Ayuda</span>
+    </nav>
+
+    <!-- About -->
+    <div class="about-card">
+      <div style="font-size:3rem;margin-bottom:0.5rem;">🔧</div>
+      <h2>Sistema de Gestión Serviteca</h2>
+      <p>Plataforma de administración para el control de clientes, vehículos y servicios mecánicos.</p>
+      <span class="about-badge">📚 Proyecto ADSO – Análisis y Desarrollo de Software</span>
+      <span class="about-badge" style="margin-left:0.5rem;">📅 Versión 1.0 – 2026</span>
+    </div>
+
+    <!-- Servicios disponibles -->
+    <div class="help-section">
+      <div class="page-header" style="margin-bottom:1rem;">
+        <span class="header-icon">🛠️</span>
+        <div><h2>Servicios Disponibles</h2></div>
+      </div>
+      <div class="services-grid">
+        <div class="service-help-card">
+          <div class="sh-icon">🛢️</div>
+          <div class="sh-name">Cambio de Aceite</div>
+          <div class="sh-desc">Sustitución del aceite del motor y filtro de aceite.</div>
+        </div>
+        <div class="service-help-card">
+          <div class="sh-icon">⚙️</div>
+          <div class="sh-name">Sincronización</div>
+          <div class="sh-desc">Ajuste del sistema de encendido, bujías y inyectores.</div>
+        </div>
+        <div class="service-help-card">
+          <div class="sh-icon">🔄</div>
+          <div class="sh-name">Alineación</div>
+          <div class="sh-desc">Calibración de la dirección y ángulos de las ruedas.</div>
+        </div>
+        <div class="service-help-card">
+          <div class="sh-icon">🚿</div>
+          <div class="sh-name">Lavado</div>
+          <div class="sh-desc">Limpieza exterior e interior completa del vehículo.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acordeón de ayuda -->
+    <div class="help-section">
+      <div class="page-header" style="margin-bottom:1rem;">
+        <span class="header-icon">❓</span>
+        <div><h2>Guía de Uso</h2></div>
+      </div>
+
+      <!-- ¿Cómo ingresar? -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-left"><span class="acc-icon">🔐</span> ¿Cómo iniciar sesión?</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <div class="step"><span class="step-num">1</span><span>Abra el archivo <strong>index.html</strong> o <strong>Login/Login.html</strong> en su navegador.</span></div>
+          <div class="step"><span class="step-num">2</span><span>Ingrese el usuario y contraseña. Use las credenciales de prueba:</span></div>
+          <table class="cred-table">
+            <thead><tr><th>Usuario</th><th>Contraseña</th><th>Perfil</th></tr></thead>
+            <tbody>
+              <tr><td>admin</td><td>1234</td><td>Administrador</td></tr>
+              <tr><td>tecnico</td><td>tec123</td><td>Técnico</td></tr>
+            </tbody>
+          </table>
+          <div class="step" style="margin-top:0.7rem;"><span class="step-num">3</span><span>Haga clic en <strong>"Ingresar al Sistema"</strong>. Será redirigido al panel principal.</span></div>
+        </div>
+      </div>
+
+      <!-- Gestión de clientes -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-left"><span class="acc-icon">👥</span> Gestión de Clientes</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Agregar Cliente:</strong> Vaya a <em>Clientes → Agregar</em>. Complete todos los campos requeridos:</p>
+          <ul>
+            <li><strong>Identificación:</strong> Solo números, entre 5 y 15 dígitos.</li>
+            <li><strong>Nombres y Apellidos:</strong> Nombre completo del cliente.</li>
+            <li><strong>Correo electrónico:</strong> Dirección de email válida.</li>
+            <li><strong>Celular:</strong> Número de 10 dígitos.</li>
+          </ul>
+          <p style="margin-top:0.5rem;"><strong>Consultar Cliente:</strong> Vaya a <em>Clientes → Consultar</em> e ingrese la identificación. Se mostrarán los datos del cliente y su historial de servicios.</p>
+          <p style="margin-top:0.5rem;"><strong>Listar Clientes:</strong> Vaya a <em>Clientes → Listar</em> para ver todos los clientes. Use el buscador para filtrar por nombre, ID o celular.</p>
+        </div>
+      </div>
+
+      <!-- Gestión de vehículos -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-left"><span class="acc-icon">🚗</span> Gestión de Vehículos</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Agregar Vehículo:</strong> Vaya a <em>Carros → Agregar</em>. Complete los campos:</p>
+          <ul>
+            <li><strong>Placa:</strong> Formato colombiano: 3 letras + 3 números (Ej: ABC123).</li>
+            <li><strong>Marca:</strong> Fabricante del vehículo (Ej: Chevrolet, Renault).</li>
+            <li><strong>Modelo:</strong> Nombre del modelo y año (Ej: Spark GT 2022).</li>
+            <li><strong>ID Propietario (opcional):</strong> Si el cliente ya está registrado, puede vincularlo.</li>
+          </ul>
+          <p style="margin-top:0.5rem;"><strong>Consultar Vehículo:</strong> Ingrese la placa para ver los datos del vehículo y todos sus servicios registrados.</p>
+        </div>
+      </div>
+
+      <!-- Registro de servicios -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-left"><span class="acc-icon">🛠️</span> Registro de Servicios</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Importante:</strong> Antes de registrar un servicio, el vehículo y el cliente deben estar registrados en el sistema.</p>
+          <div class="step"><span class="step-num">1</span><span>Vaya a <em>Servicios → Agregar</em>.</span></div>
+          <div class="step"><span class="step-num">2</span><span>Ingrese la <strong>placa del vehículo</strong>. Al salir del campo, el sistema verificará si está registrado.</span></div>
+          <div class="step"><span class="step-num">3</span><span>Ingrese la <strong>identificación del cliente</strong>. También se verifica automáticamente.</span></div>
+          <div class="step"><span class="step-num">4</span><span>Seleccione la <strong>fecha</strong> del servicio (por defecto es la fecha actual).</span></div>
+          <div class="step"><span class="step-num">5</span><span>Seleccione el <strong>tipo de servicio</strong> haciendo clic en una de las tarjetas.</span></div>
+          <div class="step"><span class="step-num">6</span><span>Haga clic en <strong>"Registrar Servicio"</strong>.</span></div>
+        </div>
+      </div>
+
+      <!-- Consultar por placa -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-left"><span class="acc-icon">🔍</span> Consultar servicios por placa</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p>Vaya a <em>Servicios → Consultar</em> e ingrese la placa del vehículo.</p>
+          <p style="margin-top:0.5rem;">El sistema mostrará:</p>
+          <ul>
+            <li>Los datos del vehículo (marca, modelo, propietario).</li>
+            <li>La cantidad total de servicios realizados.</li>
+            <li>Una tabla con: <strong>Placa del carro, Servicio prestado y Fecha del servicio</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Almacenamiento de datos -->
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc(this)">
+          <span class="acc-left"><span class="acc-icon">💾</span> ¿Dónde se guardan los datos?</span>
+          <span class="acc-arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p>El sistema utiliza <strong>localStorage</strong> del navegador para almacenar toda la información de forma local.</p>
+          <ul>
+            <li><strong>srv_clientes:</strong> Lista de clientes registrados.</li>
+            <li><strong>srv_carros:</strong> Lista de vehículos registrados.</li>
+            <li><strong>srv_servicios:</strong> Lista de servicios realizados.</li>
+          </ul>
+          <p style="margin-top:0.5rem;color:#c0392b;font-size:0.85rem;">⚠️ Los datos son locales al navegador. Si limpia el caché o usa otro navegador, los datos no estarán disponibles.</p>
+        </div>
+      </div>
+
+    </div><!-- /.help-section -->
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO &nbsp;·&nbsp; Análisis y Desarrollo de Software</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    function toggleAcc(header) {
+      const body = header.nextElementSibling;
+      const isOpen = header.classList.contains('open');
+
+      // Cerrar todos
+      document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('open'));
+      document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
+
+      // Abrir el actual si estaba cerrado
+      if (!isOpen) {
+        header.classList.add('open');
+        body.classList.add('open');
+      }
+    }
+  </script>
+</body>
+</html>

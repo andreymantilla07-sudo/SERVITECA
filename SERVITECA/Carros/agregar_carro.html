@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agregar Carro – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Clientes/agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="../Clientes/consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="../Clientes/listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link active">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_carro.html">➕ Agregar Carro</a>
+          <a href="consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Servicios/agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="../Servicios/consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="../Servicios/listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Carros</span> <span>›</span>
+      <span>Agregar Carro</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">🚗</span>
+      <div>
+        <h1>Agregar Vehículo</h1>
+        <p>Registre los datos del vehículo en el sistema.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-success" id="alertaExito" role="alert">
+      <span>✅</span><span>Vehículo registrado correctamente.</span>
+    </div>
+    <div class="alert alert-error" id="alertaError" role="alert">
+      <span>⚠️</span><span id="alertaErrorMsg">Por favor corrija los errores antes de continuar.</span>
+    </div>
+
+    <div class="card">
+      <form id="formCarro" novalidate>
+        <div class="form-grid">
+
+          <!-- Placa -->
+          <div class="form-group">
+            <label for="placa">Placa *</label>
+            <input type="text" id="placa" name="placa"
+              placeholder="Ej: ABC123" maxlength="7"
+              style="text-transform:uppercase;" />
+            <span class="field-error" id="errPlaca">La placa es requerida (formato: ABC123).</span>
+          </div>
+
+          <!-- Marca -->
+          <div class="form-group">
+            <label for="marca">Marca *</label>
+            <input type="text" id="marca" name="marca"
+              placeholder="Ej: Chevrolet" maxlength="40" />
+            <span class="field-error" id="errMarca">La marca es requerida.</span>
+          </div>
+
+          <!-- Modelo -->
+          <div class="form-group">
+            <label for="modelo">Modelo *</label>
+            <input type="text" id="modelo" name="modelo"
+              placeholder="Ej: Spark GT 2022" maxlength="60" />
+            <span class="field-error" id="errModelo">El modelo es requerido.</span>
+          </div>
+
+          <!-- Propietario (opcional, vincula con cliente) -->
+          <div class="form-group">
+            <label for="idPropietario">ID Propietario (opcional)</label>
+            <input type="text" id="idPropietario" name="idPropietario"
+              placeholder="Identificación del cliente" maxlength="15" />
+            <span class="field-error" id="errPropietario">No se encontró un cliente con esa identificación.</span>
+          </div>
+
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" class="btn btn-success">💾 Guardar Vehículo</button>
+          <button type="button" class="btn btn-outline" id="btnLimpiar">🗑️ Limpiar</button>
+          <a href="listar_carros.html" class="btn btn-primary">📋 Ver Lista</a>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    const campos = {
+      placa:   { el: document.getElementById('placa'),   err: document.getElementById('errPlaca') },
+      marca:   { el: document.getElementById('marca'),   err: document.getElementById('errMarca') },
+      modelo:  { el: document.getElementById('modelo'),  err: document.getElementById('errModelo') },
+    };
+
+    // Convertir placa a mayúsculas al escribir
+    campos.placa.el.addEventListener('input', function() {
+      this.value = this.value.toUpperCase();
+      this.classList.remove('error');
+      campos.placa.err.classList.remove('visible');
+    });
+
+    Object.values(campos).forEach(({ el, err }) => {
+      el.addEventListener('input', () => {
+        el.classList.remove('error');
+        err.classList.remove('visible');
+      });
+    });
+
+    document.getElementById('idPropietario').addEventListener('input', () => {
+      document.getElementById('errPropietario').classList.remove('visible');
+      document.getElementById('idPropietario').classList.remove('error');
+    });
+
+    function mostrarError(key, msg) {
+      campos[key].el.classList.add('error');
+      campos[key].err.textContent = msg;
+      campos[key].err.classList.add('visible');
+    }
+
+    function validar() {
+      let ok = true;
+      const placa  = campos.placa.el.value.trim().toUpperCase();
+      const marca  = campos.marca.el.value.trim();
+      const modelo = campos.modelo.el.value.trim();
+
+      if (!placa) { mostrarError('placa', 'La placa es requerida.'); ok = false; }
+      else if (!/^[A-Z]{3}\d{3}$/.test(placa)) {
+        mostrarError('placa', 'Formato inválido. Use 3 letras + 3 números (Ej: ABC123).');
+        ok = false;
+      }
+
+      if (!marca)  { mostrarError('marca',  'La marca es requerida.'); ok = false; }
+      if (!modelo) { mostrarError('modelo', 'El modelo es requerido.'); ok = false; }
+
+      return ok ? { placa, marca, modelo } : null;
+    }
+
+    document.getElementById('formCarro').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('alertaExito').classList.remove('show');
+      document.getElementById('alertaError').classList.remove('show');
+
+      const v = validar();
+      if (!v) {
+        document.getElementById('alertaError').classList.add('show');
+        return;
+      }
+
+      // Verificar propietario si fue ingresado
+      const idProp = document.getElementById('idPropietario').value.trim();
+      if (idProp) {
+        const clientes = JSON.parse(localStorage.getItem('srv_clientes') || '[]');
+        if (!clientes.some(c => c.identificacion === idProp)) {
+          document.getElementById('errPropietario').classList.add('visible');
+          document.getElementById('idPropietario').classList.add('error');
+          document.getElementById('alertaErrorMsg').textContent = 'No se encontró un cliente con esa identificación.';
+          document.getElementById('alertaError').classList.add('show');
+          return;
+        }
+      }
+
+      // Verificar placa duplicada
+      const carros = JSON.parse(localStorage.getItem('srv_carros') || '[]');
+      if (carros.some(c => c.placa === v.placa)) {
+        document.getElementById('alertaErrorMsg').textContent = `La placa ${v.placa} ya está registrada.`;
+        document.getElementById('alertaError').classList.add('show');
+        mostrarError('placa', 'Esta placa ya está registrada.');
+        return;
+      }
+
+      carros.push({
+        placa:          v.placa,
+        marca:          v.marca,
+        modelo:         v.modelo,
+        idPropietario:  idProp || null,
+        fechaRegistro:  new Date().toISOString().split('T')[0]
+      });
+      localStorage.setItem('srv_carros', JSON.stringify(carros));
+
+      document.getElementById('formCarro').reset();
+      document.getElementById('alertaExito').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('btnLimpiar').addEventListener('click', () => {
+      document.getElementById('formCarro').reset();
+      Object.values(campos).forEach(({ el, err }) => {
+        el.classList.remove('error');
+        err.classList.remove('visible');
+      });
+      document.getElementById('errPropietario').classList.remove('visible');
+      document.getElementById('idPropietario').classList.remove('error');
+      document.getElementById('alertaExito').classList.remove('show');
+      document.getElementById('alertaError').classList.remove('show');
+    });
+  </script>
+</body>
+</html>

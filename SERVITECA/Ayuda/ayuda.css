@@ -1,0 +1,125 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header h1: alargado, letras blancas, centrado y fondo azul oscuro */
+header {
+    background-color:#02538a;
+    color: #ffffff;
+    padding: 18px 25px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+/* Cuadro blanco exterior: centrado en la parte superior conteniendo el h2 */
+div.cuadro-blanco {
+    background-color: #ffffff;
+    border: 1.5px solid #cccccc;
+    border-radius: 10px;
+    padding: 25px 35px;
+    max-width: 750px;
+    width: 90%;
+    margin: 25px auto;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+div.cuadro-blanco h2 {
+    text-align: center;
+    color: #012b49;
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 22px;
+}
+
+div.cuadro-blanco h3 {
+    text-align: center;
+    color: #555555;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+/* Cuadro interior de color grisáceo que contiene la lista ul */
+div.cuadro-gris {
+    background-color: #f0f2f5;
+    border: 1px solid #dcdfe4;
+    border-radius: 8px;
+    padding: 20px 25px;
+    box-sizing: border-box;
+}
+
+div.cuadro-gris ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+div.cuadro-gris h4 {
+    margin-top: 18px;
+    margin-bottom: 8px;
+    color: #02538a;
+    font-size: 16px;
+}
+
+div.cuadro-gris h4:first-child {
+    margin-top: 0;
+}
+
+div.cuadro-gris li {
+    list-style: none;
+    font-weight: bold;
+}
+
+div.cuadro-gris p {
+    margin: 4px 0 4px 18px;
+    color: #444444;
+    font-size: 14px;
+}
+
+/* Div form por fuera del cuadro blanco */
+div.contenedor-volver {
+    text-align: center;
+    margin: 30px auto;
+}
+
+/* Botón de volver al menú principal: más grande y bonito */
+div.contenedor-volver button {
+    background-color: #00cc8b;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 204, 139, 0.25);
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+div.contenedor-volver button:hover {
+    background-color: #00b37a;
+    box-shadow: 0 6px 14px rgba(0, 204, 139, 0.35);
+    transform: translateY(-2px);
+}
+
+div.contenedor-volver button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 204, 139, 0.2);
+}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – Serviteca</title>
+  <link rel="stylesheet" href="Estilos.css" />
+  <style>
+    /* Hero banner */
+    .hero {
+      background: linear-gradient(120deg, var(--azul-principal) 0%, #1a6b9e 100%);
+      border-radius: 14px;
+      padding: 2.2rem 2.5rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 18px var(--sombra);
+    }
+    .hero-text h2 { color: #fff; font-size: 1.7rem; margin-bottom: 0.4rem; }
+    .hero-text p  { color: rgba(255,255,255,0.82); font-size: 0.95rem; }
+    .hero-icon    { font-size: 4.5rem; opacity: 0.9; }
+
+    /* Sección de accesos rápidos */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--texto-gris);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 1rem;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .quick-card {
+      background: var(--fondo-card);
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 1.4rem 1.2rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    .quick-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px var(--sombra);
+    }
+    .quick-card .qc-icon  { font-size: 2.2rem; }
+    .quick-card .qc-label { font-size: 0.88rem; font-weight: 600; color: var(--azul-principal); }
+    .quick-card .qc-desc  { font-size: 0.78rem; color: var(--texto-gris); }
+
+    /* Tabla de servicios recientes */
+    .recent-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media(max-width: 768px) { .recent-section { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--fondo-card);
+      border-radius: 12px;
+      border: 1px solid var(--borde);
+      overflow: hidden;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+    .panel-header {
+      background: var(--azul-principal);
+      color: #fff;
+      padding: 0.7rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel-body { padding: 1rem; }
+    .panel-body table { font-size: 0.82rem; }
+    .panel-body thead { background: #e8eef5; }
+    .panel-body thead th { color: var(--azul-principal); padding: 0.5rem 0.7rem; }
+    .panel-body tbody td { padding: 0.5rem 0.7rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="main.html">
+      <span class="logo-icon">🔧</span>
+      <span>SERVITECA</span>
+    </a>
+
+    <ul class="nav-menu" role="menubar">
+
+      <!-- Clientes -->
+      <li class="nav-item" role="none">
+        <span class="nav-link" role="menuitem" aria-haspopup="true">👥 Clientes ▾</span>
+        <div class="dropdown-menu" role="menu">
+          <a href="Clientes/agregar_clientes.html" role="menuitem">➕ Agregar Cliente</a>
+          <a href="Clientes/consultar_clientes.html" role="menuitem">🔍 Consultar Cliente</a>
+          <a href="Clientes/listar_clientes.html" role="menuitem">📋 Listar Clientes</a>
+        </div>
+      </li>
+
+      <!-- Carros -->
+      <li class="nav-item" role="none">
+        <span class="nav-link" role="menuitem" aria-haspopup="true">🚗 Carros ▾</span>
+        <div class="dropdown-menu" role="menu">
+          <a href="Carros/agregar_carro.html" role="menuitem">➕ Agregar Carro</a>
+          <a href="Carros/consultar_carro.html" role="menuitem">🔍 Consultar Carro</a>
+          <a href="Carros/listar_carros.html" role="menuitem">📋 Listar Carros</a>
+        </div>
+      </li>
+
+      <!-- Servicios -->
+      <li class="nav-item" role="none">
+        <span class="nav-link" role="menuitem" aria-haspopup="true">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu" role="menu">
+          <a href="Servicios/agregar_servicios.html" role="menuitem">➕ Agregar Servicio</a>
+          <a href="Servicios/consultar_servicios.html" role="menuitem">🔍 Consultar Servicio</a>
+          <a href="Servicios/listar_servicios.html" role="menuitem">📋 Listar Servicios</a>
+        </div>
+      </li>
+
+      <!-- Ayuda -->
+      <li class="nav-item" role="none">
+        <a class="nav-link" href="Ayuda/ayuda.html" role="menuitem">❓ Ayuda</a>
+      </li>
+
+    </ul>
+
+    <!-- Usuario + Salir -->
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- ===== CONTENIDO ===== -->
+  <main class="page-content">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-text">
+        <h2>Bienvenido, <span id="heroUsuario">Admin</span> 👋</h2>
+        <p>Panel de administración de la Serviteca. Gestione clientes, vehículos y servicios desde aquí.</p>
+      </div>
+      <div class="hero-icon">🔧</div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <span class="stat-number" id="statClientes">0</span>
+        <span class="stat-label">Clientes registrados</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🚗</span>
+        <span class="stat-number" id="statCarros">0</span>
+        <span class="stat-label">Vehículos registrados</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🛠️</span>
+        <span class="stat-number" id="statServicios">0</span>
+        <span class="stat-label">Servicios realizados</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📅</span>
+        <span class="stat-number" id="statHoy">0</span>
+        <span class="stat-label">Servicios hoy</span>
+      </div>
+    </div>
+
+    <!-- Accesos rápidos -->
+    <p class="section-title">⚡ Accesos Rápidos</p>
+    <div class="quick-grid">
+      <a class="quick-card" href="Clientes/agregar_clientes.html">
+        <span class="qc-icon">👤</span>
+        <span class="qc-label">Nuevo Cliente</span>
+        <span class="qc-desc">Registrar datos del cliente</span>
+      </a>
+      <a class="quick-card" href="Carros/agregar_carro.html">
+        <span class="qc-icon">🚙</span>
+        <span class="qc-label">Nuevo Vehículo</span>
+        <span class="qc-desc">Registrar placa, marca y modelo</span>
+      </a>
+      <a class="quick-card" href="Servicios/agregar_servicios.html">
+        <span class="qc-icon">🔩</span>
+        <span class="qc-label">Nuevo Servicio</span>
+        <span class="qc-desc">Registrar servicio prestado</span>
+      </a>
+      <a class="quick-card" href="Servicios/consultar_servicios.html">
+        <span class="qc-icon">🔍</span>
+        <span class="qc-label">Consultar por Placa</span>
+        <span class="qc-desc">Ver historial de servicios</span>
+      </a>
+      <a class="quick-card" href="Clientes/listar_clientes.html">
+        <span class="qc-icon">📋</span>
+        <span class="qc-label">Listar Clientes</span>
+        <span class="qc-desc">Ver todos los clientes</span>
+      </a>
+      <a class="quick-card" href="Carros/listar_carros.html">
+        <span class="qc-icon">🅿️</span>
+        <span class="qc-label">Listar Vehículos</span>
+        <span class="qc-desc">Ver todos los vehículos</span>
+      </a>
+    </div>
+
+    <!-- Paneles recientes -->
+    <div class="recent-section">
+
+      <!-- Últimos clientes -->
+      <div class="panel">
+        <div class="panel-header">👥 Últimos Clientes Registrados</div>
+        <div class="panel-body">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Celular</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyClientes">
+                <tr><td colspan="3" style="text-align:center;color:#999;padding:1rem;">Sin registros aún</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Últimos servicios -->
+      <div class="panel">
+        <div class="panel-header">🛠️ Últimos Servicios Realizados</div>
+        <div class="panel-body">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Placa</th>
+                  <th>Servicio</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyServicios">
+                <tr><td colspan="3" style="text-align:center;color:#999;padding:1rem;">Sin registros aún</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO &nbsp;·&nbsp; Análisis y Desarrollo de Software</footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // Protección de ruta: verificar sesión
+    (function() {
+      if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+        window.location.href = 'Login/Login.html';
+      }
+    })();
+
+    // Mostrar usuario en navbar
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('heroUsuario').textContent =
+      usuario.charAt(0).toUpperCase() + usuario.slice(1);
+
+    // Botón salir
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = 'Login/Login.html';
+      }
+    });
+
+    // Cargar estadísticas desde localStorage
+    function cargarEstadisticas() {
+      const clientes  = JSON.parse(localStorage.getItem('srv_clientes')  || '[]');
+      const carros    = JSON.parse(localStorage.getItem('srv_carros')    || '[]');
+      const servicios = JSON.parse(localStorage.getItem('srv_servicios') || '[]');
+
+      document.getElementById('statClientes').textContent  = clientes.length;
+      document.getElementById('statCarros').textContent    = carros.length;
+      document.getElementById('statServicios').textContent = servicios.length;
+
+      // Servicios de hoy
+      const hoy = new Date().toISOString().split('T')[0];
+      const hoyCount = servicios.filter(s => s.fecha === hoy).length;
+      document.getElementById('statHoy').textContent = hoyCount;
+
+      // Últimos 5 clientes
+      const tbodyC = document.getElementById('tbodyClientes');
+      const ultimosClientes = clientes.slice(-5).reverse();
+      if (ultimosClientes.length > 0) {
+        tbodyC.innerHTML = ultimosClientes.map(c =>
+          `<tr>
+            <td>${c.identificacion}</td>
+            <td>${c.nombres} ${c.apellidos}</td>
+            <td>${c.celular}</td>
+          </tr>`
+        ).join('');
+      }
+
+      // Últimos 5 servicios
+      const tbodyS = document.getElementById('tbodyServicios');
+      const ultimosServicios = servicios.slice(-5).reverse();
+      if (ultimosServicios.length > 0) {
+        tbodyS.innerHTML = ultimosServicios.map(s =>
+          `<tr>
+            <td>${s.placa}</td>
+            <td>${s.tipoServicio}</td>
+            <td>${s.fecha}</td>
+          </tr>`
+        ).join('');
+      }
+    }
+
+    cargarEstadisticas();
+  </script>
+
+</body>
+</html>

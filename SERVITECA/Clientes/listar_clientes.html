@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listar Clientes – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    .search-bar {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-bar input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.55rem 0.85rem;
+      border: 1.5px solid var(--borde);
+      border-radius: 7px;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .search-bar input:focus { border-color: var(--azul-principal); }
+    .count-label {
+      font-size: 0.85rem;
+      color: var(--texto-gris);
+      margin-left: auto;
+    }
+    .btn-sm {
+      padding: 0.3rem 0.65rem;
+      font-size: 0.78rem;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: background-color 0.15s;
+    }
+    .btn-sm-danger  { background: #f8d7da; color: #721c24; }
+    .btn-sm-danger:hover { background: #f1b0b7; }
+    .btn-sm-info   { background: #cce5ff; color: #004085; }
+    .btn-sm-info:hover { background: #b8daff; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link active">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Carros/agregar_carro.html">➕ Agregar Carro</a>
+          <a href="../Carros/consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="../Carros/listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Servicios/agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="../Servicios/consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="../Servicios/listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Clientes</span> <span>›</span>
+      <span>Listar Clientes</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">📋</span>
+      <div>
+        <h1>Lista de Clientes</h1>
+        <p>Todos los clientes registrados en el sistema.</p>
+      </div>
+    </div>
+
+    <!-- Alerta de borrado -->
+    <div class="alert alert-success" id="alertaElim" role="alert">
+      <span>✅</span><span>Cliente eliminado correctamente.</span>
+    </div>
+
+    <div class="card">
+      <!-- Barra de búsqueda -->
+      <div class="search-bar">
+        <input type="text" id="filtro" placeholder="🔍  Buscar por nombre, ID o celular…" />
+        <a href="agregar_clientes.html" class="btn btn-success" style="white-space:nowrap;">➕ Nuevo Cliente</a>
+        <span class="count-label" id="countLabel">0 clientes</span>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-wrapper">
+        <table id="tablaClientes">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Identificación</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Correo</th>
+              <th>Celular</th>
+              <th>F. Registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyClientes"></tbody>
+        </table>
+      </div>
+
+      <!-- Estado vacío -->
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon">👥</div>
+        <h3>No hay clientes registrados</h3>
+        <p>Comience agregando el primer cliente al sistema.</p>
+        <a href="agregar_clientes.html" class="btn btn-success" style="margin-top:1rem;">➕ Agregar Cliente</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    let clientes = [];
+
+    function cargarTabla(lista) {
+      const tbody = document.getElementById('tbodyClientes');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('countLabel');
+
+      count.textContent = lista.length + ' cliente' + (lista.length !== 1 ? 's' : '');
+
+      if (lista.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'flex';
+        empty.style.flexDirection = 'column';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = lista.map((c, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><strong>${c.identificacion}</strong></td>
+          <td>${c.nombres}</td>
+          <td>${c.apellidos}</td>
+          <td>${c.correo}</td>
+          <td>${c.celular}</td>
+          <td>${c.fechaRegistro || '—'}</td>
+          <td>
+            <button class="btn-sm btn-sm-info"
+              onclick="verCliente('${c.identificacion}')">🔍 Ver</button>
+            <button class="btn-sm btn-sm-danger"
+              onclick="eliminarCliente('${c.identificacion}')">🗑️ Eliminar</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function cargar() {
+      clientes = JSON.parse(localStorage.getItem('srv_clientes') || '[]');
+      cargarTabla(clientes);
+    }
+
+    function verCliente(id) {
+      window.location.href = `consultar_clientes.html?id=${id}`;
+    }
+
+    function eliminarCliente(id) {
+      if (!confirm(`¿Está seguro de eliminar al cliente con ID ${id}?`)) return;
+      clientes = clientes.filter(c => c.identificacion !== id);
+      localStorage.setItem('srv_clientes', JSON.stringify(clientes));
+      document.getElementById('alertaElim').classList.add('show');
+      setTimeout(() => document.getElementById('alertaElim').classList.remove('show'), 3000);
+      cargarTabla(clientes);
+    }
+
+    // Filtro en tiempo real
+    document.getElementById('filtro').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      const filtrados = clientes.filter(c =>
+        c.identificacion.includes(q) ||
+        c.nombres.toLowerCase().includes(q) ||
+        c.apellidos.toLowerCase().includes(q) ||
+        c.celular.includes(q)
+      );
+      cargarTabla(filtrados);
+    });
+
+    cargar();
+
+    // Si viene de consultar con id en URL, pre-cargar
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('id')) {
+      document.getElementById('filtro').value = params.get('id');
+      document.getElementById('filtro').dispatchEvent(new Event('input'));
+    }
+  </script>
+</body>
+</html>

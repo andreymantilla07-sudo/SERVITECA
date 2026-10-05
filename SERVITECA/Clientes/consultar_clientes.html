@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consultar Cliente – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    .resultado-card {
+      background: var(--fondo-card);
+      border: 1.5px solid var(--azul-principal);
+      border-radius: 12px;
+      padding: 1.6rem 2rem;
+      margin-top: 1.5rem;
+      display: none;
+      box-shadow: 0 3px 14px var(--sombra);
+    }
+    .resultado-card.show { display: block; }
+    .dato-fila {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--borde);
+      font-size: 0.92rem;
+    }
+    .dato-fila:last-child { border-bottom: none; }
+    .dato-label { font-weight: 700; color: var(--azul-principal); min-width: 180px; }
+    .dato-valor { color: var(--texto-oscuro); }
+
+    .historial-titulo {
+      margin-top: 1.4rem;
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--azul-principal);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html">
+      <span class="logo-icon">🔧</span>
+      <span>SERVITECA</span>
+    </a>
+    <ul class="nav-menu" role="menubar">
+      <li class="nav-item">
+        <span class="nav-link active">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Carros/agregar_carro.html">➕ Agregar Carro</a>
+          <a href="../Carros/consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="../Carros/listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Servicios/agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="../Servicios/consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="../Servicios/listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Clientes</span> <span>›</span>
+      <span>Consultar Cliente</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">🔍</span>
+      <div>
+        <h1>Consultar Cliente</h1>
+        <p>Busque un cliente por su número de identificación.</p>
+      </div>
+    </div>
+
+    <!-- Búsqueda -->
+    <div class="card">
+      <div class="form-grid" style="grid-template-columns: 1fr auto; align-items: end; gap: 1rem;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="buscarId">Número de Identificación</label>
+          <input type="text" id="buscarId" placeholder="Ej: 1234567890" maxlength="15" />
+          <span class="field-error" id="errBuscar">Ingrese una identificación para buscar.</span>
+        </div>
+        <button class="btn btn-primary" id="btnBuscar" style="height:42px;">🔍 Buscar</button>
+      </div>
+    </div>
+
+    <!-- Alerta no encontrado -->
+    <div class="alert alert-error" id="alertaNoEncontrado" role="alert" style="margin-top:1rem;">
+      <span>⚠️</span>
+      <span>No se encontró ningún cliente con esa identificación.</span>
+    </div>
+
+    <!-- Resultado -->
+    <div class="resultado-card" id="resultadoCard">
+      <h3 style="margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+        👤 Datos del Cliente
+      </h3>
+      <div class="dato-fila">
+        <span class="dato-label">Identificación:</span>
+        <span class="dato-valor" id="resId"></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Nombres:</span>
+        <span class="dato-valor" id="resNombres"></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Apellidos:</span>
+        <span class="dato-valor" id="resApellidos"></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Correo Electrónico:</span>
+        <span class="dato-valor" id="resCorreo"></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Celular:</span>
+        <span class="dato-valor" id="resCelular"></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Fecha de Registro:</span>
+        <span class="dato-valor" id="resFecha"></span>
+      </div>
+
+      <!-- Historial de servicios del cliente -->
+      <div class="historial-titulo">🛠️ Servicios Realizados al Cliente</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Placa</th>
+              <th>Tipo de Servicio</th>
+              <th>Fecha del Servicio</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyHistorial"></tbody>
+        </table>
+      </div>
+
+      <div class="btn-group">
+        <a href="agregar_clientes.html" class="btn btn-success">➕ Nuevo Cliente</a>
+        <a href="listar_clientes.html" class="btn btn-outline">📋 Ver Lista</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    const BADGE_MAP = {
+      'Cambio de Aceite': 'badge-aceite',
+      'Sincronización':   'badge-sync',
+      'Alineación':       'badge-alineacion',
+      'Lavado':           'badge-lavado',
+    };
+
+    document.getElementById('btnBuscar').addEventListener('click', buscar);
+    document.getElementById('buscarId').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') buscar();
+    });
+
+    function buscar() {
+      const id = document.getElementById('buscarId').value.trim();
+      const errBuscar = document.getElementById('errBuscar');
+      document.getElementById('alertaNoEncontrado').classList.remove('show');
+      document.getElementById('resultadoCard').classList.remove('show');
+
+      if (!id) {
+        errBuscar.classList.add('visible');
+        document.getElementById('buscarId').classList.add('error');
+        return;
+      }
+      errBuscar.classList.remove('visible');
+      document.getElementById('buscarId').classList.remove('error');
+
+      const clientes  = JSON.parse(localStorage.getItem('srv_clientes')  || '[]');
+      const servicios = JSON.parse(localStorage.getItem('srv_servicios') || '[]');
+
+      const cliente = clientes.find(c => c.identificacion === id);
+      if (!cliente) {
+        document.getElementById('alertaNoEncontrado').classList.add('show');
+        return;
+      }
+
+      // Llenar datos
+      document.getElementById('resId').textContent       = cliente.identificacion;
+      document.getElementById('resNombres').textContent  = cliente.nombres;
+      document.getElementById('resApellidos').textContent= cliente.apellidos;
+      document.getElementById('resCorreo').textContent   = cliente.correo;
+      document.getElementById('resCelular').textContent  = cliente.celular;
+      document.getElementById('resFecha').textContent    = cliente.fechaRegistro || '—';
+
+      // Historial de servicios
+      const srvCliente = servicios.filter(s => s.idCliente === id);
+      const tbody = document.getElementById('tbodyHistorial');
+      if (srvCliente.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#999;padding:0.8rem;">Este cliente no tiene servicios registrados.</td></tr>';
+      } else {
+        tbody.innerHTML = srvCliente.map(s => {
+          const badgeClass = BADGE_MAP[s.tipoServicio] || '';
+          return `<tr>
+            <td>${s.placa}</td>
+            <td><span class="badge ${badgeClass}">${s.tipoServicio}</span></td>
+            <td>${s.fecha}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      document.getElementById('resultadoCard').classList.add('show');
+    }
+  </script>
+</body>
+</html>

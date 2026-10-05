@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consultar Carro – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    .resultado-card {
+      background: var(--fondo-card);
+      border: 1.5px solid var(--azul-principal);
+      border-radius: 12px;
+      padding: 1.6rem 2rem;
+      margin-top: 1.5rem;
+      display: none;
+      box-shadow: 0 3px 14px var(--sombra);
+    }
+    .resultado-card.show { display: block; }
+    .dato-fila {
+      display: flex;
+      gap: 0.6rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--borde);
+      font-size: 0.92rem;
+    }
+    .dato-fila:last-child { border-bottom: none; }
+    .dato-label { font-weight: 700; color: var(--azul-principal); min-width: 170px; }
+    .dato-valor { color: var(--texto-oscuro); }
+    .placa-badge {
+      display: inline-block;
+      background: var(--azul-principal);
+      color: #fff;
+      padding: 0.2rem 0.8rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+    .historial-titulo {
+      margin-top: 1.4rem;
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--azul-principal);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Clientes/agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="../Clientes/consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="../Clientes/listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link active">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_carro.html">➕ Agregar Carro</a>
+          <a href="consultar_carro.html">��� Consultar Carro</a>
+          <a href="listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Servicios/agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="../Servicios/consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="../Servicios/listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Carros</span> <span>›</span>
+      <span>Consultar Carro</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">🔍</span>
+      <div>
+        <h1>Consultar Vehículo</h1>
+        <p>Busque un vehículo por su número de placa.</p>
+      </div>
+    </div>
+
+    <!-- Búsqueda -->
+    <div class="card">
+      <div class="form-grid" style="grid-template-columns: 1fr auto; align-items: end; gap: 1rem;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="buscarPlaca">Número de Placa</label>
+          <input type="text" id="buscarPlaca" placeholder="Ej: ABC123" maxlength="7"
+            style="text-transform:uppercase;" />
+          <span class="field-error" id="errBuscar">Ingrese una placa para buscar.</span>
+        </div>
+        <button class="btn btn-primary" id="btnBuscar" style="height:42px;">🔍 Buscar</button>
+      </div>
+    </div>
+
+    <div class="alert alert-error" id="alertaNoEncontrado" role="alert" style="margin-top:1rem;">
+      <span>⚠️</span><span>No se encontró ningún vehículo con esa placa.</span>
+    </div>
+
+    <!-- Resultado -->
+    <div class="resultado-card" id="resultadoCard">
+      <h3 style="margin-bottom:1rem;">🚗 Datos del Vehículo</h3>
+      <div class="dato-fila">
+        <span class="dato-label">Placa:</span>
+        <span class="dato-valor"><span class="placa-badge" id="resPlaca"></span></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Marca:</span>
+        <span class="dato-valor" id="resMarca"></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Modelo:</span>
+        <span class="dato-valor" id="resModelo"></span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Propietario:</span>
+        <span class="dato-valor" id="resPropietario">—</span>
+      </div>
+      <div class="dato-fila">
+        <span class="dato-label">Fecha de Registro:</span>
+        <span class="dato-valor" id="resFechaReg"></span>
+      </div>
+
+      <!-- Historial de servicios -->
+      <div class="historial-titulo">🛠️ Historial de Servicios</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Placa</th>
+              <th>Servicio Prestado</th>
+              <th>Fecha del Servicio</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyHistorial"></tbody>
+        </table>
+      </div>
+
+      <div class="btn-group">
+        <a href="agregar_carro.html" class="btn btn-success">➕ Nuevo Vehículo</a>
+        <a href="listar_carros.html" class="btn btn-outline">📋 Ver Lista</a>
+        <a href="../Servicios/agregar_servicios.html" class="btn btn-primary">🛠️ Agregar Servicio</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    const BADGE_MAP = {
+      'Cambio de Aceite': 'badge-aceite',
+      'Sincronización':   'badge-sync',
+      'Alineación':       'badge-alineacion',
+      'Lavado':           'badge-lavado',
+    };
+
+    const inputPlaca = document.getElementById('buscarPlaca');
+    inputPlaca.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
+
+    document.getElementById('btnBuscar').addEventListener('click', buscar);
+    inputPlaca.addEventListener('keydown', (e) => { if (e.key === 'Enter') buscar(); });
+
+    function buscar() {
+      const placa = inputPlaca.value.trim().toUpperCase();
+      const errBuscar = document.getElementById('errBuscar');
+      document.getElementById('alertaNoEncontrado').classList.remove('show');
+      document.getElementById('resultadoCard').classList.remove('show');
+
+      if (!placa) {
+        errBuscar.classList.add('visible');
+        inputPlaca.classList.add('error');
+        return;
+      }
+      errBuscar.classList.remove('visible');
+      inputPlaca.classList.remove('error');
+
+      const carros    = JSON.parse(localStorage.getItem('srv_carros')    || '[]');
+      const clientes  = JSON.parse(localStorage.getItem('srv_clientes')  || '[]');
+      const servicios = JSON.parse(localStorage.getItem('srv_servicios') || '[]');
+
+      const carro = carros.find(c => c.placa === placa);
+      if (!carro) {
+        document.getElementById('alertaNoEncontrado').classList.add('show');
+        return;
+      }
+
+      document.getElementById('resPlaca').textContent    = carro.placa;
+      document.getElementById('resMarca').textContent    = carro.marca;
+      document.getElementById('resModelo').textContent   = carro.modelo;
+      document.getElementById('resFechaReg').textContent = carro.fechaRegistro || '—';
+
+      // Propietario
+      if (carro.idPropietario) {
+        const propietario = clientes.find(c => c.identificacion === carro.idPropietario);
+        document.getElementById('resPropietario').textContent = propietario
+          ? `${propietario.nombres} ${propietario.apellidos} (${carro.idPropietario})`
+          : carro.idPropietario;
+      } else {
+        document.getElementById('resPropietario').textContent = '—';
+      }
+
+      // Historial de servicios
+      const srvCarro = servicios.filter(s => s.placa === placa);
+      const tbody = document.getElementById('tbodyHistorial');
+      if (srvCarro.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#999;padding:0.8rem;">Este vehículo no tiene servicios registrados.</td></tr>';
+      } else {
+        tbody.innerHTML = srvCarro.map(s => {
+          const badgeClass = BADGE_MAP[s.tipoServicio] || '';
+          return `<tr>
+            <td><strong>${s.placa}</strong></td>
+            <td><span class="badge ${badgeClass}">${s.tipoServicio}</span></td>
+            <td>${s.fecha}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      document.getElementById('resultadoCard').classList.add('show');
+    }
+
+    // Si viene con placa en URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('placa')) {
+      inputPlaca.value = params.get('placa').toUpperCase();
+      buscar();
+    }
+  </script>
+</body>
+</html>

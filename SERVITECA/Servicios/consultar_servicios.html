@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consultar Servicios – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    .resultado-card {
+      background: var(--fondo-card);
+      border: 1.5px solid var(--azul-principal);
+      border-radius: 12px;
+      padding: 1.6rem 2rem;
+      margin-top: 1.5rem;
+      display: none;
+      box-shadow: 0 3px 14px var(--sombra);
+    }
+    .resultado-card.show { display: block; }
+
+    .vehicle-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 2px solid var(--azul-principal);
+      flex-wrap: wrap;
+    }
+    .placa-badge {
+      display: inline-block;
+      background: var(--azul-principal);
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+    }
+    .vehicle-info { flex: 1; }
+    .vehicle-info h3 { color: var(--azul-principal); font-size: 1.15rem; }
+    .vehicle-info p  { color: var(--texto-gris); font-size: 0.88rem; margin-top: 0.2rem; }
+
+    /* Contador de servicios */
+    .srv-count {
+      background: var(--verde-accion);
+      color: #fff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Clientes/agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="../Clientes/consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="../Clientes/listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Carros/agregar_carro.html">➕ Agregar Carro</a>
+          <a href="../Carros/consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="../Carros/listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link active">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Servicios</span> <span>›</span>
+      <span>Consultar Servicio</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">🔍</span>
+      <div>
+        <h1>Consultar Servicios por Placa</h1>
+        <p>Ingrese la placa del vehículo para ver todos los servicios prestados.</p>
+      </div>
+    </div>
+
+    <!-- Búsqueda -->
+    <div class="card">
+      <div class="form-grid" style="grid-template-columns: 1fr auto; align-items: end; gap: 1rem;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="buscarPlaca">Placa del Vehículo</label>
+          <input type="text" id="buscarPlaca" placeholder="Ej: ABC123" maxlength="7"
+            style="text-transform:uppercase;" />
+          <span class="field-error" id="errBuscar">Ingrese una placa para consultar.</span>
+        </div>
+        <button class="btn btn-primary" id="btnBuscar" style="height:42px;">🔍 Consultar</button>
+      </div>
+    </div>
+
+    <div class="alert alert-error" id="alertaNoEncontrado" role="alert" style="margin-top:1rem;">
+      <span>⚠️</span><span id="alertaNoMsg">No se encontró ningún vehículo con esa placa.</span>
+    </div>
+
+    <!-- Resultado: datos del vehículo + tabla de servicios -->
+    <div class="resultado-card" id="resultadoCard">
+
+      <div class="vehicle-header">
+        <span class="placa-badge" id="resPlaca"></span>
+        <div class="vehicle-info">
+          <h3 id="resMarcaModelo"></h3>
+          <p id="resPropietario"></p>
+        </div>
+        <span class="srv-count" id="srvCount">0 servicios</span>
+      </div>
+
+      <!-- Tabla de servicios -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Placa del Carro</th>
+              <th>Servicio Prestado</th>
+              <th>Fecha del Servicio</th>
+              <th>Cliente</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyServicios"></tbody>
+        </table>
+      </div>
+
+      <div class="btn-group">
+        <a href="agregar_servicios.html" class="btn btn-success">➕ Nuevo Servicio</a>
+        <a href="listar_servicios.html"  class="btn btn-outline">📋 Ver Todos</a>
+        <a href="../Carros/consultar_carro.html" class="btn btn-primary" id="linkVerCarro">🚗 Ver Vehículo</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    const BADGE_MAP = {
+      'Cambio de Aceite': 'badge-aceite',
+      'Sincronización':   'badge-sync',
+      'Alineación':       'badge-alineacion',
+      'Lavado':           'badge-lavado',
+    };
+
+    const inputPlaca = document.getElementById('buscarPlaca');
+    inputPlaca.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
+    document.getElementById('btnBuscar').addEventListener('click', consultar);
+    inputPlaca.addEventListener('keydown', (e) => { if (e.key === 'Enter') consultar(); });
+
+    function consultar() {
+      const placa = inputPlaca.value.trim().toUpperCase();
+      const errBuscar = document.getElementById('errBuscar');
+      document.getElementById('alertaNoEncontrado').classList.remove('show');
+      document.getElementById('resultadoCard').classList.remove('show');
+
+      if (!placa) {
+        errBuscar.classList.add('visible');
+        inputPlaca.classList.add('error');
+        return;
+      }
+      errBuscar.classList.remove('visible');
+      inputPlaca.classList.remove('error');
+
+      const carros    = JSON.parse(localStorage.getItem('srv_carros')    || '[]');
+      const clientes  = JSON.parse(localStorage.getItem('srv_clientes')  || '[]');
+      const servicios = JSON.parse(localStorage.getItem('srv_servicios') || '[]');
+
+      const carro = carros.find(c => c.placa === placa);
+      if (!carro) {
+        document.getElementById('alertaNoMsg').textContent =
+          `No se encontró ningún vehículo con la placa "${placa}". Verifique que el vehículo esté registrado.`;
+        document.getElementById('alertaNoEncontrado').classList.add('show');
+        return;
+      }
+
+      // Encabezado del vehículo
+      document.getElementById('resPlaca').textContent       = carro.placa;
+      document.getElementById('resMarcaModelo').textContent = `${carro.marca} – ${carro.modelo}`;
+
+      if (carro.idPropietario) {
+        const prop = clientes.find(c => c.identificacion === carro.idPropietario);
+        document.getElementById('resPropietario').textContent = prop
+          ? `Propietario: ${prop.nombres} ${prop.apellidos}`
+          : `Propietario ID: ${carro.idPropietario}`;
+      } else {
+        document.getElementById('resPropietario').textContent = 'Propietario no registrado';
+      }
+
+      // Servicios de este vehículo
+      const srvCarro = servicios.filter(s => s.placa === placa);
+      const count    = srvCarro.length;
+      document.getElementById('srvCount').textContent = count + ' servicio' + (count !== 1 ? 's' : '');
+
+      const tbody = document.getElementById('tbodyServicios');
+      if (count === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:1rem;">Este vehículo no tiene servicios registrados aún.</td></tr>';
+      } else {
+        tbody.innerHTML = srvCarro.map((s, i) => {
+          const badgeClass = BADGE_MAP[s.tipoServicio] || '';
+          const cliente = clientes.find(c => c.identificacion === s.idCliente);
+          const nombreCliente = cliente
+            ? `${cliente.nombres} ${cliente.apellidos}`
+            : s.idCliente;
+          return `<tr>
+            <td>${i + 1}</td>
+            <td><strong>${s.placa}</strong></td>
+            <td><span class="badge ${badgeClass}">${s.tipoServicio}</span></td>
+            <td>${s.fecha}</td>
+            <td>${nombreCliente}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      // Link ver vehículo
+      document.getElementById('linkVerCarro').href =
+        `../Carros/consultar_carro.html?placa=${placa}`;
+
+      document.getElementById('resultadoCard').classList.add('show');
+    }
+
+    // Si viene con placa en URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('placa')) {
+      inputPlaca.value = params.get('placa').toUpperCase();
+      consultar();
+    }
+  </script>
+</body>
+</html>

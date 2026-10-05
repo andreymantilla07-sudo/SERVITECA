@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agregar Cliente – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html">
+      <span class="logo-icon">🔧</span>
+      <span>SERVITECA</span>
+    </a>
+    <ul class="nav-menu" role="menubar">
+      <li class="nav-item" role="none">
+        <span class="nav-link active" role="menuitem" aria-haspopup="true">👥 Clientes ▾</span>
+        <div class="dropdown-menu" role="menu">
+          <a href="agregar_clientes.html" role="menuitem">➕ Agregar Cliente</a>
+          <a href="consultar_clientes.html" role="menuitem">🔍 Consultar Cliente</a>
+          <a href="listar_clientes.html" role="menuitem">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item" role="none">
+        <span class="nav-link" role="menuitem" aria-haspopup="true">🚗 Carros ▾</span>
+        <div class="dropdown-menu" role="menu">
+          <a href="../Carros/agregar_carro.html" role="menuitem">➕ Agregar Carro</a>
+          <a href="../Carros/consultar_carro.html" role="menuitem">🔍 Consultar Carro</a>
+          <a href="../Carros/listar_carros.html" role="menuitem">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item" role="none">
+        <span class="nav-link" role="menuitem" aria-haspopup="true">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu" role="menu">
+          <a href="../Servicios/agregar_servicios.html" role="menuitem">➕ Agregar Servicio</a>
+          <a href="../Servicios/consultar_servicios.html" role="menuitem">🔍 Consultar Servicio</a>
+          <a href="../Servicios/listar_servicios.html" role="menuitem">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item" role="none">
+        <a class="nav-link" href="../Ayuda/ayuda.html" role="menuitem">❓ Ayuda</a>
+      </li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
+      <a href="../main.html">🏠 Inicio</a>
+      <span>›</span>
+      <span>Clientes</span>
+      <span>›</span>
+      <span>Agregar Cliente</span>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="page-header">
+      <span class="header-icon">👤</span>
+      <div>
+        <h1>Agregar Cliente</h1>
+        <p>Complete los datos para registrar un nuevo cliente en el sistema.</p>
+      </div>
+    </div>
+
+    <!-- Alerta de respuesta -->
+    <div class="alert alert-success" id="alertaExito" role="alert">
+      <span>✅</span>
+      <span>Cliente registrado correctamente.</span>
+    </div>
+    <div class="alert alert-error" id="alertaError" role="alert">
+      <span>⚠️</span>
+      <span id="alertaErrorMsg">Por favor corrija los errores antes de continuar.</span>
+    </div>
+
+    <!-- Formulario -->
+    <div class="card">
+      <form id="formCliente" novalidate>
+        <div class="form-grid">
+
+          <!-- Identificación -->
+          <div class="form-group">
+            <label for="identificacion">Identificación *</label>
+            <input type="text" id="identificacion" name="identificacion"
+              placeholder="Ej: 1234567890" maxlength="15" />
+            <span class="field-error" id="errIdentificacion">La identificación es requerida.</span>
+          </div>
+
+          <!-- Nombres -->
+          <div class="form-group">
+            <label for="nombres">Nombres *</label>
+            <input type="text" id="nombres" name="nombres"
+              placeholder="Ej: Juan Carlos" maxlength="60" />
+            <span class="field-error" id="errNombres">El nombre es requerido.</span>
+          </div>
+
+          <!-- Apellidos -->
+          <div class="form-group">
+            <label for="apellidos">Apellidos *</label>
+            <input type="text" id="apellidos" name="apellidos"
+              placeholder="Ej: Rodríguez Pérez" maxlength="60" />
+            <span class="field-error" id="errApellidos">Los apellidos son requeridos.</span>
+          </div>
+
+          <!-- Celular -->
+          <div class="form-group">
+            <label for="celular">Celular *</label>
+            <input type="text" id="celular" name="celular"
+              placeholder="Ej: 3001234567" maxlength="15" />
+            <span class="field-error" id="errCelular">Ingrese un celular válido (10 dígitos).</span>
+          </div>
+
+          <!-- Correo -->
+          <div class="form-group full-width">
+            <label for="correo">Correo Electrónico *</label>
+            <input type="email" id="correo" name="correo"
+              placeholder="Ej: juan@correo.com" maxlength="80" />
+            <span class="field-error" id="errCorreo">Ingrese un correo electrónico válido.</span>
+          </div>
+
+        </div><!-- /.form-grid -->
+
+        <div class="btn-group">
+          <button type="submit" class="btn btn-success">💾 Guardar Cliente</button>
+          <button type="button" class="btn btn-outline" id="btnLimpiar">🗑️ Limpiar</button>
+          <a href="listar_clientes.html" class="btn btn-primary">📋 Ver Lista</a>
+        </div>
+
+      </form>
+    </div><!-- /.card -->
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    // Verificar sesión
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    // Referencias a campos
+    const campos = {
+      identificacion: { el: document.getElementById('identificacion'), err: document.getElementById('errIdentificacion') },
+      nombres:        { el: document.getElementById('nombres'),        err: document.getElementById('errNombres') },
+      apellidos:      { el: document.getElementById('apellidos'),      err: document.getElementById('errApellidos') },
+      celular:        { el: document.getElementById('celular'),        err: document.getElementById('errCelular') },
+      correo:         { el: document.getElementById('correo'),         err: document.getElementById('errCorreo') },
+    };
+
+    // Limpiar error al escribir
+    Object.values(campos).forEach(({ el, err }) => {
+      el.addEventListener('input', () => {
+        el.classList.remove('error');
+        err.classList.remove('visible');
+      });
+    });
+
+    function mostrarError(key, msg) {
+      campos[key].el.classList.add('error');
+      campos[key].err.textContent = msg;
+      campos[key].err.classList.add('visible');
+    }
+
+    function validar() {
+      let ok = true;
+      const v = {};
+      Object.keys(campos).forEach(k => { v[k] = campos[k].el.value.trim(); });
+
+      if (!v.identificacion) { mostrarError('identificacion', 'La identificación es requerida.'); ok = false; }
+      else if (!/^\d{5,15}$/.test(v.identificacion)) { mostrarError('identificacion', 'Solo números, entre 5 y 15 dígitos.'); ok = false; }
+
+      if (!v.nombres) { mostrarError('nombres', 'El nombre es requerido.'); ok = false; }
+
+      if (!v.apellidos) { mostrarError('apellidos', 'Los apellidos son requeridos.'); ok = false; }
+
+      if (!v.celular) { mostrarError('celular', 'El celular es requerido.'); ok = false; }
+      else if (!/^\d{10}$/.test(v.celular)) { mostrarError('celular', 'El celular debe tener 10 dígitos numéricos.'); ok = false; }
+
+      if (!v.correo) { mostrarError('correo', 'El correo es requerido.'); ok = false; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.correo)) { mostrarError('correo', 'Ingrese un correo electrónico válido.'); ok = false; }
+
+      return ok ? v : null;
+    }
+
+    document.getElementById('formCliente').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('alertaExito').classList.remove('show');
+      document.getElementById('alertaError').classList.remove('show');
+
+      const v = validar();
+      if (!v) {
+        document.getElementById('alertaError').classList.add('show');
+        return;
+      }
+
+      // Verificar identificación duplicada
+      const clientes = JSON.parse(localStorage.getItem('srv_clientes') || '[]');
+      if (clientes.some(c => c.identificacion === v.identificacion)) {
+        document.getElementById('alertaErrorMsg').textContent = `Ya existe un cliente con la identificación ${v.identificacion}.`;
+        document.getElementById('alertaError').classList.add('show');
+        mostrarError('identificacion', 'Esta identificación ya está registrada.');
+        return;
+      }
+
+      // Guardar
+      clientes.push({
+        identificacion: v.identificacion,
+        nombres:        v.nombres,
+        apellidos:      v.apellidos,
+        correo:         v.correo,
+        celular:        v.celular,
+        fechaRegistro:  new Date().toISOString().split('T')[0]
+      });
+      localStorage.setItem('srv_clientes', JSON.stringify(clientes));
+
+      // Limpiar y mostrar éxito
+      document.getElementById('formCliente').reset();
+      document.getElementById('alertaExito').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('btnLimpiar').addEventListener('click', () => {
+      document.getElementById('formCliente').reset();
+      Object.values(campos).forEach(({ el, err }) => {
+        el.classList.remove('error');
+        err.classList.remove('visible');
+      });
+      document.getElementById('alertaExito').classList.remove('show');
+      document.getElementById('alertaError').classList.remove('show');
+    });
+  </script>
+</body>
+</html>

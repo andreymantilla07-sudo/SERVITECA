@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agregar Servicio – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    /* Tarjetas de tipo de servicio */
+    .service-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.4rem;
+    }
+    .service-option {
+      border: 2px solid var(--borde);
+      border-radius: 10px;
+      padding: 0.9rem 0.6rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background-color 0.2s;
+      background: #fff;
+    }
+    .service-option:hover {
+      border-color: var(--azul-principal);
+      background: #f0f5fa;
+    }
+    .service-option.selected {
+      border-color: var(--verde-accion);
+      background: #edf7f1;
+    }
+    .service-option input[type="radio"] { display: none; }
+    .service-option .svc-icon { font-size: 1.8rem; display: block; margin-bottom: 0.3rem; }
+    .service-option .svc-label { font-size: 0.82rem; font-weight: 600; color: var(--texto-oscuro); }
+
+    /* Info del carro/cliente encontrado */
+    .info-found {
+      margin-top: 0.4rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      display: none;
+    }
+    .info-found.show { display: block; }
+    .info-found.ok  { background: #d4edda; color: #155724; }
+    .info-found.err { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Clientes/agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="../Clientes/consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="../Clientes/listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Carros/agregar_carro.html">➕ Agregar Carro</a>
+          <a href="../Carros/consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="../Carros/listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link active">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Servicios</span> <span>›</span>
+      <span>Agregar Servicio</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">🛠️</span>
+      <div>
+        <h1>Registrar Servicio</h1>
+        <p>Ingrese los datos del servicio prestado al vehículo.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-success" id="alertaExito" role="alert">
+      <span>✅</span><span>Servicio registrado correctamente.</span>
+    </div>
+    <div class="alert alert-error" id="alertaError" role="alert">
+      <span>⚠️</span><span id="alertaErrorMsg">Por favor corrija los errores antes de continuar.</span>
+    </div>
+
+    <div class="card">
+      <form id="formServicio" novalidate>
+        <div class="form-grid">
+
+          <!-- Placa del carro -->
+          <div class="form-group">
+            <label for="placa">Placa del Vehículo *</label>
+            <input type="text" id="placa" name="placa"
+              placeholder="Ej: ABC123" maxlength="7"
+              style="text-transform:uppercase;" />
+            <span class="field-error" id="errPlaca">La placa es requerida.</span>
+            <div class="info-found" id="infoPlaca"></div>
+          </div>
+
+          <!-- Identificación del cliente -->
+          <div class="form-group">
+            <label for="idCliente">Identificación del Cliente *</label>
+            <input type="text" id="idCliente" name="idCliente"
+              placeholder="Ej: 1234567890" maxlength="15" />
+            <span class="field-error" id="errIdCliente">La identificación del cliente es requerida.</span>
+            <div class="info-found" id="infoCliente"></div>
+          </div>
+
+          <!-- Fecha del servicio -->
+          <div class="form-group">
+            <label for="fecha">Fecha del Servicio *</label>
+            <input type="date" id="fecha" name="fecha" />
+            <span class="field-error" id="errFecha">La fecha es requerida.</span>
+          </div>
+
+        </div><!-- /.form-grid -->
+
+        <!-- Tipo de servicio -->
+        <div class="form-group" style="margin-top:1.2rem;">
+          <label>Tipo de Servicio *</label>
+          <div class="service-cards" id="serviceCards">
+
+            <label class="service-option" for="svcAceite">
+              <input type="radio" id="svcAceite" name="tipoServicio" value="Cambio de Aceite" />
+              <span class="svc-icon">🛢️</span>
+              <span class="svc-label">Cambio de Aceite</span>
+            </label>
+
+            <label class="service-option" for="svcSync">
+              <input type="radio" id="svcSync" name="tipoServicio" value="Sincronización" />
+              <span class="svc-icon">⚙️</span>
+              <span class="svc-label">Sincronización</span>
+            </label>
+
+            <label class="service-option" for="svcAlin">
+              <input type="radio" id="svcAlin" name="tipoServicio" value="Alineación" />
+              <span class="svc-icon">🔄</span>
+              <span class="svc-label">Alineación</span>
+            </label>
+
+            <label class="service-option" for="svcLavado">
+              <input type="radio" id="svcLavado" name="tipoServicio" value="Lavado" />
+              <span class="svc-icon">🚿</span>
+              <span class="svc-label">Lavado</span>
+            </label>
+
+          </div>
+          <span class="field-error" id="errServicio">Seleccione un tipo de servicio.</span>
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" class="btn btn-success">💾 Registrar Servicio</button>
+          <button type="button" class="btn btn-outline" id="btnLimpiar">🗑️ Limpiar</button>
+          <a href="listar_servicios.html" class="btn btn-primary">📋 Ver Lista</a>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    // Poner fecha de hoy por defecto
+    document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+
+    // Resaltar tarjeta de servicio seleccionada
+    document.querySelectorAll('.service-option input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.querySelectorAll('.service-option').forEach(opt => opt.classList.remove('selected'));
+        radio.closest('.service-option').classList.add('selected');
+        document.getElementById('errServicio').classList.remove('visible');
+      });
+    });
+
+    // Autocompletar info de placa al salir del campo
+    const inputPlaca = document.getElementById('placa');
+    inputPlaca.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
+    inputPlaca.addEventListener('blur', () => buscarCarro());
+
+    function buscarCarro() {
+      const placa = inputPlaca.value.trim().toUpperCase();
+      const info  = document.getElementById('infoPlaca');
+      info.classList.remove('show', 'ok', 'err');
+      if (!placa) return;
+      const carros = JSON.parse(localStorage.getItem('srv_carros') || '[]');
+      const carro  = carros.find(c => c.placa === placa);
+      if (carro) {
+        info.textContent = `✅ ${carro.marca} ${carro.modelo}`;
+        info.classList.add('show', 'ok');
+      } else {
+        info.textContent = '⚠️ Vehículo no registrado. Regístrelo primero en Carros.';
+        info.classList.add('show', 'err');
+      }
+    }
+
+    // Autocompletar info de cliente al salir del campo
+    const inputCliente = document.getElementById('idCliente');
+    inputCliente.addEventListener('blur', () => buscarCliente());
+
+    function buscarCliente() {
+      const id   = inputCliente.value.trim();
+      const info = document.getElementById('infoCliente');
+      info.classList.remove('show', 'ok', 'err');
+      if (!id) return;
+      const clientes = JSON.parse(localStorage.getItem('srv_clientes') || '[]');
+      const cliente  = clientes.find(c => c.identificacion === id);
+      if (cliente) {
+        info.textContent = `✅ ${cliente.nombres} ${cliente.apellidos}`;
+        info.classList.add('show', 'ok');
+      } else {
+        info.textContent = '⚠️ Cliente no registrado. Regístrelo primero en Clientes.';
+        info.classList.add('show', 'err');
+      }
+    }
+
+    // Limpiar errores al escribir
+    ['placa', 'idCliente', 'fecha'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        document.getElementById(id).classList.remove('error');
+        document.getElementById('err' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.remove('visible');
+      });
+    });
+
+    function validar() {
+      let ok = true;
+      const placa      = document.getElementById('placa').value.trim().toUpperCase();
+      const idCliente  = document.getElementById('idCliente').value.trim();
+      const fecha      = document.getElementById('fecha').value;
+      const tipoRadio  = document.querySelector('input[name="tipoServicio"]:checked');
+
+      if (!placa) {
+        document.getElementById('placa').classList.add('error');
+        document.getElementById('errPlaca').classList.add('visible');
+        ok = false;
+      } else {
+        // Verificar que el carro existe
+        const carros = JSON.parse(localStorage.getItem('srv_carros') || '[]');
+        if (!carros.some(c => c.placa === placa)) {
+          document.getElementById('placa').classList.add('error');
+          document.getElementById('errPlaca').textContent = 'Este vehículo no está registrado en el sistema.';
+          document.getElementById('errPlaca').classList.add('visible');
+          ok = false;
+        }
+      }
+
+      if (!idCliente) {
+        document.getElementById('idCliente').classList.add('error');
+        document.getElementById('errIdCliente').classList.add('visible');
+        ok = false;
+      } else {
+        // Verificar que el cliente existe
+        const clientes = JSON.parse(localStorage.getItem('srv_clientes') || '[]');
+        if (!clientes.some(c => c.identificacion === idCliente)) {
+          document.getElementById('idCliente').classList.add('error');
+          document.getElementById('errIdCliente').textContent = 'Este cliente no está registrado en el sistema.';
+          document.getElementById('errIdCliente').classList.add('visible');
+          ok = false;
+        }
+      }
+
+      if (!fecha) {
+        document.getElementById('fecha').classList.add('error');
+        document.getElementById('errFecha').classList.add('visible');
+        ok = false;
+      }
+
+      if (!tipoRadio) {
+        document.getElementById('errServicio').classList.add('visible');
+        ok = false;
+      }
+
+      return ok ? { placa, idCliente, fecha, tipoServicio: tipoRadio?.value } : null;
+    }
+
+    document.getElementById('formServicio').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('alertaExito').classList.remove('show');
+      document.getElementById('alertaError').classList.remove('show');
+
+      const v = validar();
+      if (!v) {
+        document.getElementById('alertaError').classList.add('show');
+        return;
+      }
+
+      const servicios = JSON.parse(localStorage.getItem('srv_servicios') || '[]');
+      servicios.push({
+        id:           Date.now(),
+        placa:        v.placa,
+        idCliente:    v.idCliente,
+        fecha:        v.fecha,
+        tipoServicio: v.tipoServicio,
+        registradoPor: localStorage.getItem('serviteca_usuario') || 'admin'
+      });
+      localStorage.setItem('srv_servicios', JSON.stringify(servicios));
+
+      // Limpiar formulario
+      document.getElementById('formServicio').reset();
+      document.querySelectorAll('.service-option').forEach(opt => opt.classList.remove('selected'));
+      document.getElementById('infoPlaca').classList.remove('show');
+      document.getElementById('infoCliente').classList.remove('show');
+      document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+
+      document.getElementById('alertaExito').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('btnLimpiar').addEventListener('click', () => {
+      document.getElementById('formServicio').reset();
+      document.querySelectorAll('.service-option').forEach(opt => opt.classList.remove('selected'));
+      ['placa', 'idCliente', 'fecha'].forEach(id => {
+        document.getElementById(id).classList.remove('error');
+      });
+      ['errPlaca', 'errIdCliente', 'errFecha', 'errServicio'].forEach(id => {
+        document.getElementById(id).classList.remove('visible');
+      });
+      ['infoPlaca', 'infoCliente'].forEach(id => {
+        document.getElementById(id).classList.remove('show', 'ok', 'err');
+      });
+      document.getElementById('alertaExito').classList.remove('show');
+      document.getElementById('alertaError').classList.remove('show');
+      document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+    });
+
+    // Si viene con placa desde listar_carros
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('placa')) {
+      document.getElementById('placa').value = params.get('placa').toUpperCase();
+      buscarCarro();
+    }
+  </script>
+</body>
+</html>

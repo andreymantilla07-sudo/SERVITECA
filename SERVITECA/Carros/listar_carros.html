@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listar Carros – Serviteca</title>
+  <link rel="stylesheet" href="../Estilos.css" />
+  <style>
+    .search-bar {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-bar input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.55rem 0.85rem;
+      border: 1.5px solid var(--borde);
+      border-radius: 7px;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .search-bar input:focus { border-color: var(--azul-principal); }
+    .count-label { font-size: 0.85rem; color: var(--texto-gris); margin-left: auto; }
+    .placa-badge {
+      display: inline-block;
+      background: var(--azul-principal);
+      color: #fff;
+      padding: 0.15rem 0.55rem;
+      border-radius: 5px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+    }
+    .btn-sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; border-radius: 5px; border: none; cursor: pointer; font-family: inherit; font-weight: 600; transition: background-color 0.15s; }
+    .btn-sm-danger { background: #f8d7da; color: #721c24; }
+    .btn-sm-danger:hover { background: #f1b0b7; }
+    .btn-sm-info   { background: #cce5ff; color: #004085; }
+    .btn-sm-info:hover { background: #b8daff; }
+    .btn-sm-success { background: #d4edda; color: #155724; }
+    .btn-sm-success:hover { background: #b8dfc6; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Menú principal">
+    <a class="navbar-brand" href="../main.html"><span class="logo-icon">🔧</span><span>SERVITECA</span></a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <span class="nav-link">👥 Clientes ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Clientes/agregar_clientes.html">➕ Agregar Cliente</a>
+          <a href="../Clientes/consultar_clientes.html">🔍 Consultar Cliente</a>
+          <a href="../Clientes/listar_clientes.html">📋 Listar Clientes</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link active">🚗 Carros ▾</span>
+        <div class="dropdown-menu">
+          <a href="agregar_carro.html">➕ Agregar Carro</a>
+          <a href="consultar_carro.html">🔍 Consultar Carro</a>
+          <a href="listar_carros.html">📋 Listar Carros</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link">🛠️ Servicios ▾</span>
+        <div class="dropdown-menu">
+          <a href="../Servicios/agregar_servicios.html">➕ Agregar Servicio</a>
+          <a href="../Servicios/consultar_servicios.html">🔍 Consultar Servicio</a>
+          <a href="../Servicios/listar_servicios.html">📋 Listar Servicios</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="../Ayuda/ayuda.html">❓ Ayuda</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.7rem;">
+      <span style="color:rgba(255,255,255,0.8);font-size:0.85rem;" id="spanUsuario"></span>
+      <a class="btn-salir" href="#" id="btnSalir">🚪 Salir</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="page-content">
+    <nav class="breadcrumb">
+      <a href="../main.html">🏠 Inicio</a> <span>›</span>
+      <span>Carros</span> <span>›</span>
+      <span>Listar Carros</span>
+    </nav>
+
+    <div class="page-header">
+      <span class="header-icon">📋</span>
+      <div>
+        <h1>Lista de Vehículos</h1>
+        <p>Todos los vehículos registrados en el sistema.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-success" id="alertaElim" role="alert">
+      <span>✅</span><span>Vehículo eliminado correctamente.</span>
+    </div>
+
+    <div class="card">
+      <div class="search-bar">
+        <input type="text" id="filtro" placeholder="🔍  Buscar por placa, marca o modelo…" />
+        <a href="agregar_carro.html" class="btn btn-success" style="white-space:nowrap;">➕ Nuevo Vehículo</a>
+        <span class="count-label" id="countLabel">0 vehículos</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Placa</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Propietario</th>
+              <th>F. Registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyCarros"></tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon">🚗</div>
+        <h3>No hay vehículos registrados</h3>
+        <p>Comience agregando el primer vehículo al sistema.</p>
+        <a href="agregar_carro.html" class="btn btn-success" style="margin-top:1rem;">➕ Agregar Vehículo</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Serviteca &nbsp;·&nbsp; Proyecto ADSO</footer>
+
+  <script>
+    if (localStorage.getItem('serviteca_sesion') !== 'activa') {
+      window.location.href = '../Login/Login.html';
+    }
+    const usuario = localStorage.getItem('serviteca_usuario') || 'Admin';
+    document.getElementById('spanUsuario').textContent = '👤 ' + usuario;
+    document.getElementById('btnSalir').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Desea cerrar sesión?')) {
+        localStorage.removeItem('serviteca_sesion');
+        localStorage.removeItem('serviteca_usuario');
+        window.location.href = '../Login/Login.html';
+      }
+    });
+
+    let carros = [];
+    let clientes = [];
+
+    function getNombrePropietario(idProp) {
+      if (!idProp) return '—';
+      const c = clientes.find(x => x.identificacion === idProp);
+      return c ? `${c.nombres} ${c.apellidos}` : idProp;
+    }
+
+    function cargarTabla(lista) {
+      const tbody = document.getElementById('tbodyCarros');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('countLabel');
+
+      count.textContent = lista.length + ' vehículo' + (lista.length !== 1 ? 's' : '');
+
+      if (lista.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'flex';
+        empty.style.flexDirection = 'column';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = lista.map((c, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><span class="placa-badge">${c.placa}</span></td>
+          <td>${c.marca}</td>
+          <td>${c.modelo}</td>
+          <td>${getNombrePropietario(c.idPropietario)}</td>
+          <td>${c.fechaRegistro || '—'}</td>
+          <td style="display:flex;gap:0.3rem;flex-wrap:wrap;">
+            <button class="btn-sm btn-sm-info"
+              onclick="verCarro('${c.placa}')">🔍 Ver</button>
+            <button class="btn-sm btn-sm-success"
+              onclick="agregarServicio('${c.placa}')">🛠️</button>
+            <button class="btn-sm btn-sm-danger"
+              onclick="eliminarCarro('${c.placa}')">🗑️</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function cargar() {
+      carros   = JSON.parse(localStorage.getItem('srv_carros')   || '[]');
+      clientes = JSON.parse(localStorage.getItem('srv_clientes') || '[]');
+      cargarTabla(carros);
+    }
+
+    function verCarro(placa) {
+      window.location.href = `consultar_carro.html?placa=${placa}`;
+    }
+
+    function agregarServicio(placa) {
+      window.location.href = `../Servicios/agregar_servicios.html?placa=${placa}`;
+    }
+
+    function eliminarCarro(placa) {
+      if (!confirm(`¿Está seguro de eliminar el vehículo con placa ${placa}?`)) return;
+      carros = carros.filter(c => c.placa !== placa);
+      localStorage.setItem('srv_carros', JSON.stringify(carros));
+      document.getElementById('alertaElim').classList.add('show');
+      setTimeout(() => document.getElementById('alertaElim').classList.remove('show'), 3000);
+      cargarTabla(carros);
+    }
+
+    document.getElementById('filtro').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      const filtrados = carros.filter(c =>
+        c.placa.toLowerCase().includes(q) ||
+        c.marca.toLowerCase().includes(q) ||
+        c.modelo.toLowerCase().includes(q)
+      );
+      cargarTabla(filtrados);
+    });
+
+    cargar();
+  </script>
+</body>
+</html>
